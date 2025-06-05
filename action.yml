@@ -1,0 +1,46 @@
+name: 'SQL DB Test'
+author: 'Tobias Biemann'
+description: 'Initialize SQL-Service for test run.'
+branding:
+  icon: "database"
+  color: "blue"
+
+inputs:
+  sql-sa-pw:
+    description: 'The password for the SQL-Server login name sa'
+    required: true
+
+  sqlpackage-path:
+    description: 'Absolute path to the folder of the dacpac-file'
+    required: false
+    default: ''
+
+  db-name:
+    description: 'Database name'
+    required: false
+    default: 'TestDB'
+
+outputs:
+  package-file:
+    description: 'Absolute path to the used dacpac-file'
+    value: ${{ steps.inst-dac.outputs.FILE }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Initialize SQL-Server on Linux runner
+      shell: bash
+      if: ${{ runner.os == 'Linux' }}
+      run: ${{ github.action_path }}/dist/sql-init.sh
+      env:
+        SQLPW: ${{ inputs.sql-sa-pw }}
+
+    - name: Install DACPAC
+      shell: bash
+      if: ${{ inputs.sqlpackage-path != '' }}
+      id: inst-dac
+      run: ${{ github.action_path }}/dist/install-dacpac.sh
+      env:
+        SQLPW: ${{ inputs.sql-sa-pw }}
+        DACPATH: ${{ inputs.sqlpackage-path }}
+        DBNAME: ${{ inputs.db-name }}
