@@ -28,9 +28,15 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: Check Runner OS
+      shell: bash
+      if: ${{ runner.os != 'Linux' }}
+      run: |
+        echo "This action is only working on a linux runner!"
+        exit 1
+
     - name: Initialize SQL-Server on Linux runner
       shell: bash
-      if: ${{ runner.os == 'Linux' }}
       run: ${{ github.action_path }}/dist/sql-init.sh
       env:
         SQLPW: ${{ inputs.sql-sa-pw }}
