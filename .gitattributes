@@ -1,0 +1,5 @@
+# Normalize files with LF
+*        text=auto
+
+*.yml    text
+*.sh     text eol=lf
