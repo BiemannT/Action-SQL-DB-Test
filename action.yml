@@ -1,6 +1,6 @@
 name: 'SQL DB Test'
 author: 'Tobias Biemann'
-description: 'Initialize SQL-Service for test run.'
+description: 'GitHub Action to test a MS SQL database'
 branding:
   icon: "database"
   color: "blue"
